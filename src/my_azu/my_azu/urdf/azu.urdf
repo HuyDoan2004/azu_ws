@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="Final">
+  <link
+    name="base_link">
+    <inertial>
+      <origin
+        xyz="-0.03009 4.7007E-05 0.051451"
+        rpy="0 0 0" />
+      <mass
+        value="2.479" />
+      <inertia
+        ixx="0.0071683"
+        ixy="-1.0692E-05"
+        ixz="0.0011539"
+        iyy="0.011806"
+        iyz="-7.3987E-07"
+        izz="0.014905" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://Final/meshes/base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.75294 0.75294 0.75294 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://Final/meshes/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="Lidar">
+    <inertial>
+      <origin
+        xyz="-0.019811 0.00010189 0.029504"
+        rpy="0 0 0" />
+      <mass
+        value="0.555" />
+      <inertia
+        ixx="0.0004926"
+        ixy="-1.3513E-06"
+        ixz="-8.7846E-05"
+        iyy="0.00064617"
+        iyz="-1.6597E-07"
+        izz="0.00092157" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://Final/meshes/Lidar.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.75294 0.75294 0.75294 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://Final/meshes/Lidar.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="Lidar"
+    type="revolute">
+    <origin
+      xyz="-0.06157 0 0.186"
+      rpy="0 0.0070259 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="Lidar" />
+    <axis
+      xyz="-0.0070258 0 0.99998" />
+    <limit
+      lower="0"
+      upper="0"
+      effort="0"
+      velocity="0" />
+  </joint>
+</robot>

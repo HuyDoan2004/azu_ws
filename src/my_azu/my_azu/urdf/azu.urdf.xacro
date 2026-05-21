@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Converted from azu.urdf to xacro (ROS 2 Humble compatible). -->
+<robot name="Final" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <link name="base_link">
+    <inertial>
+      <origin xyz="-0.03009 4.7007E-05 0.051451" rpy="0 0 0" />
+      <mass value="2.479" />
+      <inertia
+        ixx="0.0071683"
+        ixy="-1.0692E-05"
+        ixz="0.0011539"
+        iyy="0.011806"
+        iyz="-7.3987E-07"
+        izz="0.014905" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://my_azu/meshes/base_link.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.75294 0.75294 0.75294 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://my_azu/meshes/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <link name="Head">
+    <inertial>
+      <origin xyz="-0.019811 0.00010189 0.029504" rpy="0 0 0" />
+      <mass value="0.555" />
+      <inertia
+        ixx="0.0004926"
+        ixy="-1.3513E-06"
+        ixz="-8.7846E-05"
+        iyy="0.00064617"
+        iyz="-1.6597E-07"
+        izz="0.00092157" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://my_azu/meshes/Head.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.75294 0.75294 0.75294 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://my_azu/meshes/Head.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- Camera link (phía trước tâm Head 4cm, cao 2cm) -->
+  <link name="camera_link">
+    <inertial>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+      <mass value="0.2" />
+      <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001" />
+    </inertial>
+    <visual>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.08 0.08 0.08" />
+      </geometry>
+      <material name="gray">
+        <color rgba="0.5 0.5 0.5 1.0" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.08 0.08 0.08" />
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- LiDAR link (phía sau tâm Head 4cm, cao 7cm) -->
+  <link name="lidar_link">
+    <inertial>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+      <mass value="0.5" />
+      <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
+    </inertial>
+    <visual>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+      <geometry>
+        <cylinder radius="0.05" length="0.10" />
+      </geometry>
+      <material name="black">
+        <color rgba="0.0 0.0 0.0 1.0" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+      <geometry>
+        <cylinder radius="0.05" length="0.10" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="Head_Joint" type="revolute">
+    <origin xyz="-0.06157 0 0.186" rpy="0 0.0070259 0" />
+    <parent link="base_link" />
+    <child link="Head" />
+    <axis xyz="0 0 1" />
+    <limit lower="-3.14159" upper="3.14159" effort="1.0" velocity="1.0" />
+  </joint>
+
+  <!-- Camera joint (fixed trên Head, offset: x=+0.04m, z=+0.02m) -->
+  <joint name="Head_to_camera" type="fixed">
+    <origin xyz="0.04 0.0 0.02" rpy="0 0 0" />
+    <parent link="Head" />
+    <child link="camera_link" />
+  </joint>
+
+  <!-- LiDAR joint (fixed trên Head, offset: x=-0.04m, z=+0.07m) -->
+  <joint name="Head_to_lidar" type="fixed">
+    <origin xyz="-0.04 0.0 0.07" rpy="0 0 0" />
+    <parent link="Head" />
+    <child link="lidar_link" />
+  </joint>
+</robot>

@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="walle">
+  <!-- Arguments -->
+  <xacro:arg name="total_height" default="0.80"/>
+  <xacro:arg name="body_mesh" default="package://my_azu/meshes/walle_body.dae"/>
+  <xacro:arg name="body_scale" default="1.0"/>
+
+  <!-- Constants -->
+  <xacro:property name="PI" value="3.14159265359"/>
+  <xacro:property name="base_mass" value="5.0"/>
+
+  <!-- Base link -->
+  <link name="base_link">
+    <inertial>
+      <mass value="${base_mass}"/>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+      <inertia ixx="0.1" ixy="0" ixz="0" iyy="0.1" iyz="0" izz="0.1"/>
+    </inertial>
+    <visual>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="$(arg body_mesh)" scale="$(arg body_scale) $(arg body_scale) $(arg body_scale)"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.15" length="0.35"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- LiDAR link (mounted on top) -->
+  <link name="lidar_link">
+    <inertial>
+      <mass value="0.5"/>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+      <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
+    </inertial>
+    <visual>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.05" length="0.10"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0.0 0.0 0.0 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.05" length="0.10"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- Camera link -->
+  <link name="camera_link">
+    <inertial>
+      <mass value="0.2"/>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+      <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
+    </inertial>
+    <visual>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.08 0.08 0.08"/>
+      </geometry>
+      <material name="gray">
+        <color rgba="0.5 0.5 0.5 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.08 0.08 0.08"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- IMU link -->
+  <link name="imu_link">
+    <inertial>
+      <mass value="0.1"/>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+      <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.0001" iyz="0" izz="0.0001"/>
+    </inertial>
+  </link>
+
+  <!-- Joints -->
+  <!-- LiDAR joint (fixed on top of base) -->
+  <joint name="base_link_to_lidar" type="fixed">
+    <parent link="base_link"/>
+    <child link="lidar_link"/>
+    <origin xyz="0.0 0.0 0.2" rpy="0 0 0"/>
+  </joint>
+
+  <!-- Camera joint (fixed in front) -->
+  <joint name="base_link_to_camera" type="fixed">
+    <parent link="base_link"/>
+    <child link="camera_link"/>
+    <origin xyz="0.15 0.0 0.1" rpy="0 0.2 0"/>
+  </joint>
+
+  <!-- IMU joint (fixed at center) -->
+  <joint name="base_link_to_imu" type="fixed">
+    <parent link="base_link"/>
+    <child link="imu_link"/>
+    <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+  </joint>
+
+</robot>
