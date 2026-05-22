@@ -54,7 +54,8 @@ rtabmap:
     map_frame_id: "map"
 
     subscribe_depth: true
-    subscribe_scan: true        
+    subscribe_scan: true
+    wait_for_transform: 0.5  # Đợi TF tree ready (s)        
 
     # Map 2D từ LiDAR (gọn cho Nav2)
     Grid/FromDepth: "false"          # 2D grid lấy từ scan laser, không chiếu depth xuống

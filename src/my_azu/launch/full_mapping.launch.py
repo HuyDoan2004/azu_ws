@@ -9,6 +9,7 @@ from ament_index_python.packages import get_package_share_directory
 
 # ADD: dùng xacro + robot_state_publisher (giữ nguyên các phần khác)
 from launch.substitutions import Command, FindExecutable
+from launch_ros.parameter_descriptions import ParameterValue
 
 def generate_launch_description():
     pkg_share = get_package_share_directory('my_azu')
@@ -20,17 +21,13 @@ def generate_launch_description():
     rplidar_cfg = PathJoinSubstitution([pkg_share, 'configs', 'rplidar.yaml'])
 
     # ADD: URDF/Xacro (xuất TF từ mô hình)
-    urdf_file = PathJoinSubstitution([pkg_share, 'urdf', 'walle.urdf.xacro'])
+    urdf_file = PathJoinSubstitution([pkg_share, 'urdf', 'azu.urdf.xacro'])
     xacro_exe = FindExecutable(name='xacro')
-    body_mesh_uri = 'package://my_azu/meshes/walle_body.dae'
 
-    robot_description = Command([
-        xacro_exe, ' ',
-        urdf_file, ' ',
-        'total_height:=', '0.80', ' ',
-        'body_mesh:=',    body_mesh_uri, ' ',
-        'body_scale:=',   '1.0'
-    ])
+    robot_description = ParameterValue(
+        Command([xacro_exe, ' ', urdf_file]),
+        value_type=str
+    )
 
     joint_state_pub = Node(
         package='joint_state_publisher',
@@ -38,6 +35,7 @@ def generate_launch_description():
         name='joint_state_publisher',
         output='screen'
     )
+    
     robot_state_pub = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
@@ -99,10 +97,11 @@ def generate_launch_description():
                 'odom_frame_id': 'odom',
                 'publish_tf': True,
                 'subscribe_scan': True,
+                'wait_for_transform': 0.5,  # Đợi TF tree ready
             }
         ],
         remappings=[
-            ('scan', '/scan'),
+            ('scan', '/scan'),  # Subscribe từ lidar_link
         ]
     )
 
@@ -118,14 +117,17 @@ def generate_launch_description():
                 'map_frame_id': 'map',
                 'publish_tf': True,
                 'subscribe_odom_info': True,
-                'publish_occupancy_grid': True
+                'publish_occupancy_grid': True,
+                'wait_for_transform': 0.5,  # Đợi TF tree ready
+                'subscribe_scan': True,  # Subscribe scan từ lidar_link
+                'subscribe_depth': True,  # Subscribe depth từ camera_link
             }
         ],
         remappings=[
             ('rgb/image', '/camera/color/image_raw'),
             ('depth/image', '/camera/depth/image_rect_raw'),
             ('rgb/camera_info', '/camera/color/camera_info'),
-            ('scan', '/scan'),
+            ('scan', '/scan'),  # Subscribe từ lidar_link
         ]
     )
 
