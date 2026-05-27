@@ -13,4 +13,6 @@ rplidar_node:
     angle_min_deg: 0.0
     angle_max_deg: 360.0
     angle_increment_deg: 0.5  # 0.5–1.0 là hợp lý; nhỏ quá sẽ nặng CPU
+    angle_offset_deg: 0.0      # Nếu tiến/lùi bị đảo → để 0; chỉ dùng 180 khi LiDAR lắp quay ngược hẳn
+    invert_angle: true         # Nếu quay trái mà RViz quay phải → bật để đảo chiều góc
     publish_cloud: true # tắt nếu không cần PointCloud2

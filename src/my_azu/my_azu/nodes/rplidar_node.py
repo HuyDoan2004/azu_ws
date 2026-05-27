@@ -43,6 +43,11 @@ class RpliDriver(Node):
         self.declare_parameter('angle_min_deg', 0.0)            # 0..360
         self.declare_parameter('angle_max_deg', 360.0)
         self.declare_parameter('angle_increment_deg', 1.0)      # độ / bin
+        self.declare_parameter('angle_offset_deg', 180.0)       # Offset để fix hướng LiDAR
+        # Nếu LiDAR/driver trả góc theo chiều kim đồng hồ (hoặc lắp ngược),
+        # scan sẽ bị mirror trái/phải → odom yaw bị đảo dấu.
+        # Bật param này để đảo chiều góc về chuẩn ROS (CCW quanh +Z).
+        self.declare_parameter('invert_angle', False)
 
         self.port = str(self.get_parameter('serial_port').value)
         self.baud = int(self.get_parameter('baudrate').value)
@@ -65,6 +70,8 @@ class RpliDriver(Node):
         self.angle_min = float(amin)
         self.angle_max = float(amax)
         self.angle_increment = float(ainc)
+        self.angle_offset = math.radians(float(self.get_parameter('angle_offset_deg').value))
+        self.invert_angle = bool(self.get_parameter('invert_angle').value)
         self.num_bins = max(1, int(round((amax - amin) / ainc)))
 
         self.rmin = float(self.get_parameter('range_min').value)
@@ -295,7 +302,8 @@ class RpliDriver(Node):
             if r <= 0.0:
                 continue
 
-            a = math.radians(float(ang_deg))
+            ang = -float(ang_deg) if self.invert_angle else float(ang_deg)
+            a = math.radians(ang) + self.angle_offset
             # chuẩn hóa về [angle_min, angle_max)
             while a < self.angle_min:
                 a += 2.0 * math.pi

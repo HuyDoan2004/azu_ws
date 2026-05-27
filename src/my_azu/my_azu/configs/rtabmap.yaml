@@ -8,7 +8,7 @@ rgbd_odometry:
 
     # Để an toàn cho map 2D, ép về 3 bậc tự do (x, y, yaw)
     Reg/Force3DoF: "true"
-    subscribe_imu: true
+    subscribe_imu: false
 
     Vis/FeatureType: "6"           # ORB
     Vis/MaxFeatures: "1500"
@@ -48,42 +48,72 @@ icp_odometry:
 
 rtabmap:
   ros__parameters:
-    # Khung TF
+
+    # =========================
+    # TF
+    # =========================
     frame_id: "base_link"
     odom_frame_id: "odom"
     map_frame_id: "map"
 
     subscribe_depth: true
     subscribe_scan: true
-    wait_for_transform: 0.5  # Đợi TF tree ready (s)        
+    subscribe_imu: true
 
-    # Map 2D từ LiDAR (gọn cho Nav2)
-    Grid/FromDepth: "false"          # 2D grid lấy từ scan laser, không chiếu depth xuống
-    Grid/CellSize: "0.03"            # cell nhỏ hơn → tường mịn hơn
-    Grid/RangeMax: "6.0"             # giới hạn tầm vẽ map (m)
-    Grid/MaxObstacleHeight: "1.2"    # chỉ lấy điểm thấp (tường / vật cản thấp), bớt xuyên tường do camera cao
-
-    # Bật map 3D + Cloud 3D để bạn xem song song với 2D
-    Grid/3D: "true"
-
-    # Cloud 3D (dùng cho MapCloud/PointCloud)
-    Cloud/OutputVoxelized: "true"
-    Cloud/OutputVoxelSize: "0.02"    # voxel nhỏ hơn cho 3D map mượt
-    Cloud/MinDepth: "0.25"
-    Cloud/MaxDepth: "5.0"
-    Cloud/NoiseFiltering: "true"     # lọc nhiễu lẻ loi
-    Cloud/NoiseRadius: "0.10"        # bán kính lân cận (m)
-    Cloud/NoiseMinNeighbors: "3"     # tối thiểu 3 láng giềng để giữ điểm
-
-    # Đồng bộ RGB-D cho SLAM
-    approx_sync: true
-    approx_sync_max_interval: 0.15
-    topic_queue_size: 30
-    sync_queue_size: 100
     wait_for_transform: 0.5
 
-    # DB lưu map
+    # =========================
+    # RGB-D Sync
+    # =========================
+    approx_sync: true
+    approx_sync_max_interval: 0.15
+
+    topic_queue_size: 30
+    sync_queue_size: 100
+
+    # =========================
+    # LOOP CLOSURE
+    # =========================
+    Mem/STMSize: "50"
+
+    RGBD/ProximityBySpace: "true"
+    RGBD/ProximityPathMaxNeighbors: "10"
+    RGBD/ProximityMaxGraphDepth: "50"
+
+    RGBD/NeighborLinkRefining: "true"
+    RGBD/OptimizeFromGraphEnd: "true"
+
+    Reg/Strategy: "1"
+
+    # =========================
+    # 2D MAP (LiDAR)
+    # =========================
+    Grid/FromDepth: "false"
+    Grid/CellSize: "0.03"
+    Grid/RangeMax: "6.0"
+    Grid/MaxObstacleHeight: "1.2"
+
+    # =========================
+    # 3D MAP (RGB-D)
+    # =========================
+    Grid/3D: "true"
+
+    Cloud/OutputVoxelized: "true"
+    Cloud/OutputVoxelSize: "0.05"
+
+    Cloud/MinDepth: "0.25"
+    Cloud/MaxDepth: "4.0"
+
+    Cloud/NoiseFiltering: "true"
+    Cloud/NoiseRadius: "0.15"
+    Cloud/NoiseMinNeighbors: "5"
+
+    # =========================
+    # DATABASE
+    # =========================
     database_path: "~/ros2_ws/maps/my_home.db"
+
     database_in_memory: true
-    delete_db_on_start: true  # Không xóa map cũ
-    save_db_on_shutdown: false # Tự động lưu khi tắt
+    delete_db_on_start: true
+    save_db_on_shutdown: false
+
