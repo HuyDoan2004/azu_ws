@@ -5,6 +5,10 @@ Robot:
 
 ![Robot System](assets/Body.jpg)
 
+Systems Diagram:
+
+![Robot System](assets/Systems.jpg)
+
 Calibration:
 
 ![Robot System](assets/calibration.jpg)
