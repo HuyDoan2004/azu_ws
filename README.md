@@ -1,4 +1,6 @@
 # Robot_Azu
+This is my graduation project.
+
 Robot:
 
 ![Robot System](assets/Body.jpg)
