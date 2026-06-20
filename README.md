@@ -1,7 +1,6 @@
 # Robot_Azu
 Calibration:
 
-![Uploading image.png…]()
 
 Video SLAM 2D + 3D realtime:
 
