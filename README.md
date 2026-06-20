@@ -1,7 +1,7 @@
 # Robot_Azu
 Robot:
 
-
+![Robot System](assets/Body.jpg)
 
 Calibration:
 
